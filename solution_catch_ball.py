@@ -1,16 +1,16 @@
 import pygame, sys, random
 import neat
 
-#initialize pygame to  use it's functions
+# Initializing pygame to  use it's functions
 pygame.init()
 clock=pygame.time.Clock()
 
-#create a window where game will Run
+# Creating a window where game will run
 screen = pygame.display.set_mode((400,400))
-#title 
+# Setting the title of the game
 pygame.display.set_caption("Catch the Ball")
 
-#load images
+# Loading images
 background_image = pygame.image.load("bg.png").convert()
 plr_img = pygame.image.load("player.png").convert_alpha()
 plr_img=pygame.transform.smoothscale(plr_img,(60,90))
@@ -19,18 +19,21 @@ ball_image=pygame.transform.smoothscale(ball_image,(40,40))
 over_img=pygame.image.load("over.png").convert_alpha()
 over_img=pygame.transform.smoothscale(over_img,(200,100))
 
-#creating objects of game
+# Creating objects of game
 ball=pygame.Rect(200,0,40,40)
 player=pygame.Rect(100,310,60,90)
 
+# Creating a variable 'generation' and initiliazing it to zero
 generation=0
 
 count=0
 
 def eval_genomes(genomes, config): #######
 
+    # Declaring the variable 'generation' as 'global'
     global generation
 
+    # Incrementing the value of 'generation'
     generation+=1
 
     for gid,genome in genomes: #####
@@ -39,21 +42,25 @@ def eval_genomes(genomes, config): #######
 
         count_font=pygame.font.Font('freesansbold.ttf', 20)
 
+        # Creating a variable 'genome.fitness' and initializing it to zero
         genome.fitness = 0
 
         speed=0
         
         while True:
 
+            # Increment the genome's fitness by 0.1
             genome.fitness+=0.1
 
             screen.blit(background_image,[0,0])
-            #event loop to check which key is print
+            
+            # Checking whether 'quit' event occurs
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                #use events to move the player
+                    
+                # Checking for events and moving accordingly
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_RIGHT:
                         speed=5
@@ -87,5 +94,7 @@ def eval_genomes(genomes, config): #######
             clock.tick(30)
 
 config = neat.config.Config(neat.DefaultGenome, neat.DefaultReproduction,neat.DefaultSpeciesSet, neat.DefaultStagnation,'config-feedforward.txt')  
+# Creating the population using 'Population()' function and passing 'config' as an argument  to it
 p = neat.Population(config)
+# Running the 'eval_genomes()' function to evaluate the fitness for 7 generations
 winner = p.run(eval_genomes,7)
